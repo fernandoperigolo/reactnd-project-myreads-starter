@@ -1,5 +1,7 @@
 import React from 'react'
 // import * as BooksAPI from './BooksAPI'
+import { Route } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import BookShelf from './BookShelf';
 import './App.css'
 
@@ -17,10 +19,34 @@ class BooksApp extends React.Component {
   render() {
     return (
       <div className="app">
-        {this.state.showSearchPage ? (
+        <Route exact path='/' render={({ history }) => (
+          <div className="list-books">
+            <div className="list-books-title">
+              <h1>MyReads</h1>
+            </div>
+            <div className="list-books-content">
+              <div>
+                <BookShelf shelfTitle="Currently Reading" />
+                <BookShelf shelfTitle="Want To Read" />
+                <BookShelf shelfTitle="Read" />
+              </div>
+            </div>
+            <div className="open-search">
+              <Link
+                to="/search"
+                className="add-link"
+              >Add a book</Link>
+            </div>
+          </div>
+        )} />
+
+        <Route exact path='/search' render={() => (
           <div className="search-books">
             <div className="search-books-bar">
-              <a className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</a>
+              <Link
+                to="/"
+                className="close-search"
+              >Close</Link>
               <div className="search-books-input-wrapper">
                 {/*
                   NOTES: The search from BooksAPI is limited to a particular set of search terms.
@@ -38,23 +64,7 @@ class BooksApp extends React.Component {
               <ol className="books-grid"></ol>
             </div>
           </div>
-        ) : (
-          <div className="list-books">
-            <div className="list-books-title">
-              <h1>MyReads</h1>
-            </div>
-            <div className="list-books-content">
-              <div>
-                <BookShelf shelfTitle="Currently Reading" />
-                <BookShelf shelfTitle="Want To Read" />
-                <BookShelf shelfTitle="Read" />
-              </div>
-            </div>
-            <div className="open-search">
-              <a onClick={() => this.setState({ showSearchPage: true })}>Add a book</a>
-            </div>
-          </div>
-        )}
+        )} />
       </div>
     )
   }
