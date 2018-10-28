@@ -18,16 +18,28 @@ class BooksApp extends React.Component {
     });
   }
 
-  filterContacts = (books,shelf) => {
+  filterBooks = (books,shelf) => {
     return books.filter((book) => {
       return book.shelf === shelf;
     })
-  };
+  }
+
+  changeShelfBook = (bookId, shelf) => {
+    const books = this.state.books.map((book) => {
+      if(book.id === bookId) {
+        book.shelf = shelf;
+      }
+      return book;
+    });
+    this.setState({
+      books
+    });
+  }
 
   render() {
-    const currentlyReadingBooks = this.filterContacts(this.state.books,'currentlyReading');
-    const wantToReadBooks = this.filterContacts(this.state.books,'wantToRead');
-    const readBooks = this.filterContacts(this.state.books,'read');
+    const currentlyReadingBooks = this.filterBooks(this.state.books,'currentlyReading');
+    const wantToReadBooks = this.filterBooks(this.state.books,'wantToRead');
+    const readBooks = this.filterBooks(this.state.books,'read');
 
     return (
       <div className="app">
@@ -38,9 +50,9 @@ class BooksApp extends React.Component {
             </div>
             <div className="list-books-content">
               <div>
-                <BookShelf shelfTitle="Currently Reading" books={currentlyReadingBooks} />
-                <BookShelf shelfTitle="Want To Read" books={wantToReadBooks} />
-                <BookShelf shelfTitle="Read" books={readBooks} />
+                <BookShelf shelfTitle="Currently Reading" books={currentlyReadingBooks} onChangeShelfBook={this.changeShelfBook} />
+                <BookShelf shelfTitle="Want To Read" books={wantToReadBooks} onChangeShelfBook={this.changeShelfBook} />
+                <BookShelf shelfTitle="Read" books={readBooks} onChangeShelfBook={this.changeShelfBook} />
               </div>
             </div>
             <div className="open-search">

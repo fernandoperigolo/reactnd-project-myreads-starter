@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import BookShelfChanger from './BookShelfChanger';
 
 class BookItem extends Component {
   render() {
@@ -8,13 +9,7 @@ class BookItem extends Component {
           <div className="book-top">
             <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url('+this.props.book.imageLinks.smallThumbnail+')' }}></div>
             <div className="book-shelf-changer">
-              <select>
-                <option value="move" disabled>Move to...</option>
-                <option value="currentlyReading">Currently Reading</option>
-                <option value="wantToRead">Want to Read</option>
-                <option value="read">Read</option>
-                <option value="none">None</option>
-              </select>
+              <BookShelfChanger currentShelf={this.props.book.shelf} onChangeShelfBook={this.props.onChangeShelfBook} bookId={this.props.book.id} />
             </div>
           </div>
           <div className="book-title">{this.props.book.title}</div>
