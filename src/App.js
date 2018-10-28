@@ -7,7 +7,9 @@ import './App.css';
 
 class BooksApp extends React.Component {
   state = {
-    books: []
+    books: [],
+    query: '',
+    searchResults: []
   }
 
   componentDidMount() {
@@ -25,15 +27,40 @@ class BooksApp extends React.Component {
   }
 
   changeShelfBook = (bookId, shelf) => {
-    const books = this.state.books.map((book) => {
-      if(book.id === bookId) {
-        book.shelf = shelf;
-      }
-      return book;
+    console.log('changeShelfBook:', bookId, shelf);
+    BooksAPI.update({id:bookId},shelf).then((result) => {
+      const books = this.state.books.map((book) => {
+        if(book.id === bookId) {
+          book.shelf = shelf;
+        }
+        return book;
+      });
+      this.setState({
+        books
+      });
+      console.log('BooksAPI.update result:', result);
     });
+  }
+
+  onChangeSearchTerm = (searchTerm) => {
     this.setState({
-      books
+      query: searchTerm
     });
+    clearTimeout(this.delayTimer);
+    this.delayTimer = setTimeout(() => {
+        BooksAPI.search(this.state.query).then((booksFinded) => {
+          console.log(booksFinded);
+          if(booksFinded.length > 0){
+            this.setState({
+              searchResults: booksFinded
+            });
+          } else {
+            this.setState({
+              searchResults: []
+            });
+          }
+        });
+    }, 1000);
   }
 
   render() {
@@ -80,12 +107,12 @@ class BooksApp extends React.Component {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                <input type="text" placeholder="Search by title or author"/>
+                <input type="text" placeholder="Search by title or author" onChange={(event) => this.onChangeSearchTerm(event.target.value)} value={this.state.query} />
 
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid"></ol>
+              <BookShelf shelfTitle="Search Results" books={this.state.searchResults} onChangeShelfBook={this.changeShelfBook} />
             </div>
           </div>
         )} />
