@@ -13,7 +13,7 @@ class BookItem extends Component {
             </div>
           </div>
           <div className="book-title">{this.props.book.title}</div>
-          <div className="book-authors">{this.props.book.authors.map((author) => (author)).join(", ")}</div>
+          <div className="book-authors">{this.props.book.authors.join(", ")}</div>
         </div>
       </li>
     );
