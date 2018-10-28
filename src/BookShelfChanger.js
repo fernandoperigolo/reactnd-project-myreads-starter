@@ -7,12 +7,12 @@ class BookShelfChanger extends Component {
 
   render() {
     return (
-        <select onChange={(event) => this.onChangeShelfBook(event.target.value)}>
+        <select onChange={(event) => this.onChangeShelfBook(event.target.value)} value={this.props.currentShelf}>
             <option value="move" disabled>Move to...</option>
-            <option value="currentlyReading" selected={this.props.currentShelf == 'currentlyReading'}>Currently Reading</option>
-            <option value="wantToRead" selected={this.props.currentShelf == 'wantToRead'}>Want to Read</option>
-            <option value="read" selected={this.props.currentShelf == 'read'}>Read</option>
-            <option value="none" selected={this.props.currentShelf == 'none'}>None</option>
+            <option value="currentlyReading">Currently Reading</option>
+            <option value="wantToRead">Want to Read</option>
+            <option value="read">Read</option>
+            <option value="none">None</option>
         </select>
     );
   }
