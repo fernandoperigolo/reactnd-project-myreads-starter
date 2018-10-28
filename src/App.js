@@ -18,7 +18,17 @@ class BooksApp extends React.Component {
     });
   }
 
+  filterContacts = (books,shelf) => {
+    return books.filter((book) => {
+      return book.shelf === shelf;
+    })
+  };
+
   render() {
+    const currentlyReadingBooks = this.filterContacts(this.state.books,'currentlyReading');
+    const wantToReadBooks = this.filterContacts(this.state.books,'wantToRead');
+    const readBooks = this.filterContacts(this.state.books,'read');
+
     return (
       <div className="app">
         <Route exact path='/' render={({ history }) => (
@@ -28,9 +38,9 @@ class BooksApp extends React.Component {
             </div>
             <div className="list-books-content">
               <div>
-                <BookShelf shelfTitle="Currently Reading" books={this.state.books} />
-                <BookShelf shelfTitle="Want To Read" books={this.state.books} />
-                <BookShelf shelfTitle="Read" books={this.state.books} />
+                <BookShelf shelfTitle="Currently Reading" books={currentlyReadingBooks} />
+                <BookShelf shelfTitle="Want To Read" books={wantToReadBooks} />
+                <BookShelf shelfTitle="Read" books={readBooks} />
               </div>
             </div>
             <div className="open-search">
