@@ -26,19 +26,25 @@ class BooksApp extends React.Component {
     })
   }
 
-  changeShelfBook = (bookId, shelf) => {
-    console.log('changeShelfBook:', bookId, shelf);
-    BooksAPI.update({id:bookId},shelf).then((result) => {
+  changeShelfBook = (bookTochange, shelf) => {
+    let isBookInList = false;
+    BooksAPI.update({id:bookTochange.id},shelf).then((result) => {
       const books = this.state.books.map((book) => {
-        if(book.id === bookId) {
+        if(book.id === bookTochange.id) {
           book.shelf = shelf;
+          isBookInList = true;
         }
         return book;
       });
+
+      if(isBookInList === false){
+        bookTochange.shelf = shelf;
+        books.push(bookTochange);
+      }
+
       this.setState({
         books
       });
-      console.log('BooksAPI.update result:', result);
     });
   }
 
@@ -49,7 +55,6 @@ class BooksApp extends React.Component {
     clearTimeout(this.delayTimer);
     this.delayTimer = setTimeout(() => {
         BooksAPI.search(this.state.query).then((booksFinded) => {
-          console.log(booksFinded);
           if(booksFinded.length > 0){
             this.setState({
               searchResults: booksFinded
@@ -99,16 +104,7 @@ class BooksApp extends React.Component {
                 className="close-search"
               >Close</Link>
               <div className="search-books-input-wrapper">
-                {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
                 <input type="text" placeholder="Search by title or author" onChange={(event) => this.onChangeSearchTerm(event.target.value)} value={this.state.query} />
-
               </div>
             </div>
             <div className="search-books-results">

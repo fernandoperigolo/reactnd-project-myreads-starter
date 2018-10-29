@@ -9,7 +9,7 @@ class BookItem extends Component {
           <div className="book-top">
             <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url('+this.props.book.imageLinks.smallThumbnail+')' }}></div>
             <div className="book-shelf-changer">
-              <BookShelfChanger currentShelf={this.props.book.shelf} onChangeShelfBook={this.props.onChangeShelfBook} bookId={this.props.book.id} />
+              <BookShelfChanger currentShelf={this.props.book.shelf} onChangeShelfBook={this.props.onChangeShelfBook} book={this.props.book} />
             </div>
           </div>
           <div className="book-title">{this.props.book.title}</div>

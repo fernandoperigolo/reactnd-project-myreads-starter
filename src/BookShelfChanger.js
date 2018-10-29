@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 class BookShelfChanger extends Component {
   onChangeShelfBook = (value) => {
-    this.props.onChangeShelfBook(this.props.bookId, value);
+    this.props.onChangeShelfBook(this.props.book, value);
   }
 
   render() {
