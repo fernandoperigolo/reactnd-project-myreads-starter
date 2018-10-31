@@ -103,6 +103,10 @@ body, .app {
   padding: 80px 10px 20px;
 }
 
+.loadgin-message {
+  padding: 0 20px 40px;
+}
+
 /* books grid */
 
 .books-grid {

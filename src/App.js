@@ -9,7 +9,8 @@ class BooksApp extends React.Component {
   state = {
     books: [],
     query: '',
-    searchResults: []
+    searchResults: [],
+    isLoadingSearch: false
   }
 
   componentDidMount() {
@@ -55,42 +56,67 @@ class BooksApp extends React.Component {
   }
 
   onChangeSearchTerm = (searchTerm) => {
+    // Quando o termo muda, já limpo o resultado da busca e atualizo o termo
     this.setState({
+      searchResults: [],
       query: searchTerm
     });
     clearTimeout(this.delayTimer);
-    this.delayTimer = setTimeout(() => {
-        BooksAPI.search(this.state.query).then((booksFinded) => {
-          if(booksFinded.length > 0){
-            // Varro todos os livros encontrados
-            const booksFindedFiltered = booksFinded.map((bookFinded) => {
-              // Seto os livros como none por padrão
-              bookFinded.shelf = 'none';
-              // Confiro nos livros do state se algum foi retornado na busca
-              this.state.books.map((book) => {
-                if(bookFinded.id === book.id){
-                  // Se um livro do state for igual a um livro retornado na busca, atribuo o shelf correto no resultado da busca
-                  bookFinded.shelf = book.shelf;
-                }
+    // Se tiver algum termo de busca
+    if(searchTerm !== '') {
+      // Informo que vou carregar
+      this.setState({
+        isLoadingSearch: true
+      });
+      this.delayTimer = setTimeout(() => {
+          BooksAPI.search(this.state.query).then((booksFinded) => {
+            // Informo que a busca terminou
+            this.setState({
+              isLoadingSearch: false
+            });
+            if(booksFinded.length > 0){
+              // Varro todos os livros encontrados
+              const booksFindedFiltered = booksFinded.map((bookFinded) => {
+                // Seto os livros como none por padrão
+                bookFinded.shelf = 'none';
+                // Confiro nos livros do state se algum foi retornado na busca
+                this.state.books.map((book) => {
+                  if(bookFinded.id === book.id){
+                    // Se um livro do state for igual a um livro retornado na busca, atribuo o shelf correto no resultado da busca
+                    bookFinded.shelf = book.shelf;
+                  }
+                  return book;
+                });
+                return bookFinded;
               });
-              return bookFinded;
-            });
-            this.setState({
-              searchResults: booksFindedFiltered
-            });
-          } else {
-            this.setState({
-              searchResults: []
-            });
-          }
-        });
-    }, 1000);
+              this.setState({
+                searchResults: booksFindedFiltered
+              });
+            } else {
+              this.setState({
+                searchResults: []
+              });
+            }
+          });
+      }, 1000);
+    }
   }
 
   render() {
     const currentlyReadingBooks = this.filterBooks(this.state.books,'currentlyReading');
     const wantToReadBooks = this.filterBooks(this.state.books,'wantToRead');
     const readBooks = this.filterBooks(this.state.books,'read');
+    // Controle da mensagem que será exibida no resultado da busca
+    let loadingMessage = '';
+    if(!this.state.query) {
+      loadingMessage = 'Start typing to search a book';
+    }
+    if(this.state.query && this.state.searchResults.length === 0 && !this.state.isLoadingSearch) {
+      loadingMessage = 'No books finded';
+    }
+    if(this.state.isLoadingSearch) {
+      loadingMessage = 'Searching books...';
+    }
 
     return (
       <div className="app">
@@ -127,7 +153,12 @@ class BooksApp extends React.Component {
               </div>
             </div>
             <div className="search-books-results">
-              <BookShelf shelfTitle="Search Results" books={this.state.searchResults} onChangeShelfBook={this.changeShelfBook} />
+              {loadingMessage !== '' && 
+                <p className="loadgin-message">{loadingMessage}</p>
+              }
+              {this.state.searchResults.length > 0 &&
+                <BookShelf shelfTitle="Search Results" books={this.state.searchResults} onChangeShelfBook={this.changeShelfBook} />
+              }
             </div>
           </div>
         )} />
