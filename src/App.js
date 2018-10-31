@@ -56,8 +56,21 @@ class BooksApp extends React.Component {
     this.delayTimer = setTimeout(() => {
         BooksAPI.search(this.state.query).then((booksFinded) => {
           if(booksFinded.length > 0){
+            // Varro todos os livros encontrados
+            const booksFindedFiltered = booksFinded.map((bookFinded) => {
+              // Seto os livros como none por padrão
+              bookFinded.shelf = 'none';
+              // Confiro nos livros do state se algum foi retornado na busca
+              this.state.books.map((book) => {
+                if(bookFinded.id === book.id){
+                  // Se um livro do state for igual a um livro retornado na busca, atribuo o shelf correto no resultado da busca
+                  bookFinded.shelf = book.shelf;
+                }
+              });
+              return bookFinded;
+            });
             this.setState({
-              searchResults: booksFinded
+              searchResults: booksFindedFiltered
             });
           } else {
             this.setState({
