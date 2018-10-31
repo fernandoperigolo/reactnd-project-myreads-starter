@@ -28,16 +28,22 @@ class BooksApp extends React.Component {
 
   changeShelfBook = (bookTochange, shelf) => {
     let isBookInList = false;
+    // Tento trocar o livro de shelf
     BooksAPI.update({id:bookTochange.id},shelf).then((result) => {
+      // Se consigo atualizar, varro os livros do state
       const books = this.state.books.map((book) => {
+        // Verifico se o livro já está em algum shelf
         if(book.id === bookTochange.id) {
+          // Se o livro já está em algum shelf, troco ele de shelf e seto a variável de controle como true
           book.shelf = shelf;
           isBookInList = true;
         }
         return book;
       });
 
+      // Se a variável de controle for false, significa que o livro não está em nenhum shelf
       if(isBookInList === false){
+        // Atribuo o novo livro ao shelf selecionado e adiciono ele a lista de livros no state
         bookTochange.shelf = shelf;
         books.push(bookTochange);
       }
