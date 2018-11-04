@@ -1,6 +1,8 @@
 # Projeto MyReads
 
-Minha versão do projeto My Reads da Udacity. Este é um app React onde podemos fazer a gestão dos livros.
+Minha versão do projeto My Reads do curso Nanodegree React da Udacity.
+
+Este é um app React onde podemos fazer a gestão dos livros.
 
 - Na página inicial temos ter sessões, Livros que estou lendo, quero ler e lidos;
 - Você pode trocar os livros de sessões;
